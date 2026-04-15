@@ -58,6 +58,7 @@ function formatTime(timestamp) {
   return `${hh}:${mm}`;
 }
 
+// 전체 채팅 복사용
 function buildMessageText(message) {
   const time = formatTime(message.createdAt);
 
@@ -70,6 +71,19 @@ function buildMessageText(message) {
   }
 
   return `[${time}] ${message.sender}: ${message.text || ''}`;
+}
+
+// 개별 메시지 복사용: 내용만 복사
+function buildSingleCopyText(message) {
+  if (message.type === 'system') {
+    return message.text || '';
+  }
+
+  if (message.type === 'file') {
+    return message.fileName || message.text || '';
+  }
+
+  return message.text || '';
 }
 
 async function copyToClipboard(text) {
@@ -132,7 +146,7 @@ function renderMessage(message) {
 
   const copyBtn = wrap.querySelector('.message-copy-btn');
   copyBtn.addEventListener('click', () => {
-    copyToClipboard(buildMessageText(message));
+    copyToClipboard(buildSingleCopyText(message));
   });
 
   chatMessages.appendChild(wrap);
