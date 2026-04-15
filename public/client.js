@@ -21,6 +21,7 @@ const userListText = document.getElementById('userListText');
 const chatMessages = document.getElementById('chatMessages');
 
 const leaveRoomBtn = document.getElementById('leaveRoomBtn');
+const copyChatBtn = document.getElementById('copyChatBtn');
 const messageForm = document.getElementById('messageForm');
 const messageInput = document.getElementById('messageInput');
 const fileInput = document.getElementById('fileInput');
@@ -57,6 +58,44 @@ function formatTime(timestamp) {
   return `${hh}:${mm}`;
 }
 
+function buildMessageText(message) {
+  const time = formatTime(message.createdAt);
+
+  if (message.type === 'system') {
+    return `[${time}] [SYSTEM] ${message.text || ''}`;
+  }
+
+  if (message.type === 'file') {
+    return `[${time}] ${message.sender}: [파일] ${message.fileName || message.text || ''} ${message.fileUrl || ''}`;
+  }
+
+  return `[${time}] ${message.sender}: ${message.text || ''}`;
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    alert('복사되었습니다.');
+  } catch (error) {
+    console.error(error);
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+      document.execCommand('copy');
+      alert('복사되었습니다.');
+    } catch (copyError) {
+      console.error(copyError);
+      alert('복사에 실패했습니다.');
+    }
+
+    document.body.removeChild(textarea);
+  }
+}
+
 function renderMessage(message) {
   const wrap = document.createElement('div');
   const isMe = currentRoom && message.sender === nickname;
@@ -87,8 +126,14 @@ function renderMessage(message) {
     <div class="bubble">
       ${bodyHtml}
       <div class="time">${formatTime(message.createdAt)}</div>
+      <button type="button" class="message-copy-btn">복사</button>
     </div>
   `;
+
+  const copyBtn = wrap.querySelector('.message-copy-btn');
+  copyBtn.addEventListener('click', () => {
+    copyToClipboard(buildMessageText(message));
+  });
 
   chatMessages.appendChild(wrap);
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -205,7 +250,10 @@ function enterRoom(roomId, password) {
       }
 
       currentRoomPassword = password;
-      renderRoomInfo(response.room);
+      renderRoomInfo({
+        ...response.room,
+        messages: [...response.room.messages],
+      });
       renderMessages(response.room.messages);
       showScreen(screenChat);
       messageInput.focus();
@@ -348,6 +396,16 @@ leaveRoomBtn.addEventListener('click', () => {
   });
 });
 
+copyChatBtn.addEventListener('click', async () => {
+  if (!currentRoom || !currentRoom.messages || !currentRoom.messages.length) {
+    alert('복사할 채팅 내용이 없습니다.');
+    return;
+  }
+
+  const text = currentRoom.messages.map(buildMessageText).join('\n');
+  await copyToClipboard(text);
+});
+
 socket.on('roomList', (rooms) => {
   if (!currentRoom) {
     renderRoomList(rooms);
@@ -366,12 +424,23 @@ socket.on('roomList', (rooms) => {
 
 socket.on('roomInfo', (room) => {
   if (currentRoom && room.id === currentRoom.id) {
-    renderRoomInfo(room);
+    const existingMessages = Array.isArray(currentRoom.messages) ? currentRoom.messages : [];
+    currentRoom = {
+      ...room,
+      messages: existingMessages,
+    };
+    renderRoomInfo(currentRoom);
   }
 });
 
 socket.on('newMessage', (message) => {
   if (!currentRoom) return;
+
+  if (!Array.isArray(currentRoom.messages)) {
+    currentRoom.messages = [];
+  }
+
+  currentRoom.messages.push(message);
   renderMessage(message);
 });
 

@@ -33,7 +33,7 @@ if (!fs.existsSync(UPLOADS_DIR)) {
  *     createdAt: number,
  *     users: Map<socketId, { nickname: string }>,
  *     messages: Array<message>,
- *     files: string[] // 업로드된 실제 파일 경로 목록
+ *     files: string[]
  *   }
  * }
  */
@@ -142,7 +142,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
+    fileSize: 10 * 1024 * 1024,
   },
 });
 

@@ -160,6 +160,12 @@ h1, h2 {
   gap: 8px;
 }
 
+.top-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -302,6 +308,20 @@ h1, h2 {
 }
 
 .file-link:hover {
+  text-decoration: underline;
+}
+
+.message-copy-btn {
+  margin-top: 6px;
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.message-copy-btn:hover {
   text-decoration: underline;
 }
 

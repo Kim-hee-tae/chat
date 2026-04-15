@@ -17,7 +17,6 @@
     </header>
 
     <main class="main-wrap">
-      <!-- 닉네임 화면 -->
       <section id="screenNickname" class="screen active">
         <div class="card">
           <h1>닉네임 설정</h1>
@@ -30,7 +29,6 @@
         </div>
       </section>
 
-      <!-- 로비 화면 -->
       <section id="screenLobby" class="screen">
         <div class="card">
           <div class="card-header-row">
@@ -62,7 +60,6 @@
         </div>
       </section>
 
-      <!-- 채팅 화면 -->
       <section id="screenChat" class="screen">
         <div class="chat-layout">
           <div class="card room-info-card">
@@ -71,7 +68,10 @@
                 <h2 id="chatRoomTitle">채팅방</h2>
                 <p id="chatRoomMeta" class="muted">참여자 0명</p>
               </div>
-              <button id="leaveRoomBtn" class="btn danger small">나가기</button>
+              <div class="top-actions">
+                <button id="copyChatBtn" class="btn ghost small">전체 복사</button>
+                <button id="leaveRoomBtn" class="btn danger small">나가기</button>
+              </div>
             </div>
             <div class="user-list-wrap">
               <strong>참여자:</strong>
