@@ -1,6 +1,7 @@
 {
   "name": "chat",
   "version": "1.0.0",
+  "description": "simple node server for render",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
