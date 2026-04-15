@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <title>모바일 채팅방</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">모바일 채팅방</div>
+      <div class="nickname-chip" id="currentNicknameLabel">닉네임 미설정</div>
+    </header>
+
+    <main class="main-wrap">
+      <!-- 닉네임 화면 -->
+      <section id="screenNickname" class="screen active">
+        <div class="card">
+          <h1>닉네임 설정</h1>
+          <p class="muted">처음 접속하면 닉네임을 먼저 정합니다.</p>
+
+          <label class="label">닉네임</label>
+          <input id="nicknameInput" class="input" type="text" maxlength="20" placeholder="예: 축구왕, 철수, guest01" />
+
+          <button id="saveNicknameBtn" class="btn primary">닉네임 저장</button>
+        </div>
+      </section>
+
+      <!-- 로비 화면 -->
+      <section id="screenLobby" class="screen">
+        <div class="card">
+          <div class="card-header-row">
+            <h2>채팅방 목록</h2>
+            <button id="changeNicknameBtn" class="btn ghost small">닉네임 변경</button>
+          </div>
+
+          <div class="form-grid">
+            <div>
+              <label class="label">방 이름</label>
+              <input id="createRoomName" class="input" type="text" maxlength="30" placeholder="방 이름 입력" />
+            </div>
+            <div>
+              <label class="label">방 비밀번호</label>
+              <input id="createRoomPassword" class="input" type="password" maxlength="30" placeholder="비밀번호 입력" />
+            </div>
+          </div>
+
+          <button id="createRoomBtn" class="btn primary full">방 만들기</button>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <h2>입장 가능한 방</h2>
+            <button id="refreshRoomsBtn" class="btn ghost small">새로고침</button>
+          </div>
+
+          <div id="roomList" class="room-list"></div>
+        </div>
+      </section>
+
+      <!-- 채팅 화면 -->
+      <section id="screenChat" class="screen">
+        <div class="chat-layout">
+          <div class="card room-info-card">
+            <div class="room-title-row">
+              <div>
+                <h2 id="chatRoomTitle">채팅방</h2>
+                <p id="chatRoomMeta" class="muted">참여자 0명</p>
+              </div>
+              <button id="leaveRoomBtn" class="btn danger small">나가기</button>
+            </div>
+            <div class="user-list-wrap">
+              <strong>참여자:</strong>
+              <span id="userListText">-</span>
+            </div>
+          </div>
+
+          <div class="card chat-card">
+            <div id="chatMessages" class="chat-messages"></div>
+
+            <form id="messageForm" class="message-form">
+              <div class="file-row">
+                <input id="fileInput" class="file-input" type="file" />
+                <button id="sendFileBtn" type="button" class="btn secondary">파일 보내기</button>
+              </div>
+
+              <div class="message-row">
+                <textarea
+                  id="messageInput"
+                  class="textarea"
+                  rows="2"
+                  maxlength="1000"
+                  placeholder="메시지를 입력하세요"
+                ></textarea>
+                <button type="submit" class="btn primary send-btn">전송</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>
